@@ -13,7 +13,7 @@ from cadlib.extrude import CADSequence
 from cadlib.visualize import CADsolid2pc, create_CAD
 from utils.pc_utils import write_ply, read_ply
 
-DATA_ROOT = "../data"
+DATA_ROOT = "D:\\projects\\deepcad\\data\\"
 RAW_DATA = os.path.join(DATA_ROOT, "cad_json")
 RECORD_FILE = os.path.join(DATA_ROOT, "train_val_test_split.json")
 
@@ -32,12 +32,14 @@ def process_one(data_id):
         return
 
     save_path = os.path.join(SAVE_DIR, data_id + ".ply")
+
     # if os.path.exists(save_path):
     #     print("skip {}: file already exists".format(data_id))
     #     return
 
     # print("[processing] {}".format(data_id))
     json_path = os.path.join(RAW_DATA, data_id + ".json")
+    print(f"\t{json_path}")
     with open(json_path, "r") as fp:
         data = json.load(fp)
 
@@ -74,6 +76,6 @@ parser.add_argument('--only_test', action="store_true", help="only convert test 
 args = parser.parse_args()
 
 if not args.only_test:
-    Parallel(n_jobs=10, verbose=2)(delayed(process_one)(x) for x in all_data["train"])
+    Parallel(n_jobs=10, verbose=15)(delayed(process_one)(x) for x in all_data["train"])
     Parallel(n_jobs=10, verbose=2)(delayed(process_one)(x) for x in all_data["validation"])
 Parallel(n_jobs=10, verbose=2)(delayed(process_one)(x) for x in all_data["test"])

@@ -84,7 +84,7 @@ def run(args):
     if os.path.exists(save_path):
         response = input(save_path + ' already exists, overwrite? (y/n) ')
         if response == 'y':
-            os.system("del {}".format(save_path))
+            os.system("rm {}".format(save_path))   # os.system("del {}".format(save_path))
             record_res = None
         else:
             with open(save_path, 'r') as fp:

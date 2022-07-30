@@ -76,6 +76,10 @@ parser.add_argument('--only_test', action="store_true", help="only convert test 
 args = parser.parse_args()
 
 if not args.only_test:
-    Parallel(n_jobs=10, verbose=15)(delayed(process_one)(x) for x in all_data["train"])
-    Parallel(n_jobs=10, verbose=2)(delayed(process_one)(x) for x in all_data["validation"])
+    for x in all_data["train"]:
+        process_one(x)
+    # Parallel(n_jobs=10, verbose=15)(delayed(process_one)(x) for x in all_data["train"])
+    for x in all_data["validation"]:
+        process_one(x)
+    # Parallel(n_jobs=10, verbose=2)(delayed(process_one)(x) for x in all_data["validation"])
 Parallel(n_jobs=10, verbose=2)(delayed(process_one)(x) for x in all_data["test"])

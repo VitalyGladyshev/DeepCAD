@@ -23,7 +23,7 @@ SAVE_DIR = os.path.join(DATA_ROOT, "pc_cad")
 if not os.path.exists(SAVE_DIR):
     os.makedirs(SAVE_DIR)
 
-INVALID_IDS = []
+INVALID_IDS = ["0011/00116212"]
 
 
 def process_one(data_id):
@@ -39,7 +39,7 @@ def process_one(data_id):
 
     # print("[processing] {}".format(data_id))
     json_path = os.path.join(RAW_DATA, data_id + ".json")
-    print(f"\t{json_path}")
+    # print(f"\t{json_path}")
     with open(json_path, "r") as fp:
         data = json.load(fp)
 
@@ -76,10 +76,10 @@ parser.add_argument('--only_test', action="store_true", help="only convert test 
 args = parser.parse_args()
 
 if not args.only_test:
-    for x in all_data["train"]:
-        process_one(x)
-    # Parallel(n_jobs=10, verbose=15)(delayed(process_one)(x) for x in all_data["train"])
-    for x in all_data["validation"]:
-        process_one(x)
-    # Parallel(n_jobs=10, verbose=2)(delayed(process_one)(x) for x in all_data["validation"])
+    Parallel(n_jobs=10, verbose=2)(delayed(process_one)(x) for x in all_data["train"])
+    # for x in all_data["train"]:
+    #     process_one(x)
+    Parallel(n_jobs=10, verbose=2)(delayed(process_one)(x) for x in all_data["validation"])
+    # for x in all_data["validation"]:
+    #     process_one(x)
 Parallel(n_jobs=10, verbose=2)(delayed(process_one)(x) for x in all_data["test"])

@@ -30,7 +30,7 @@ class Config(object):
     # beta1 = 0.5
     grad_clip = None
 
-    save_frequency = 100
+    save_frequency = 1
     val_frequency = 10
 
     def __init__(self, args):

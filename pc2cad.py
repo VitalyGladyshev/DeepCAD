@@ -178,6 +178,7 @@ class ShapeCodesDataset(Dataset):
     def __getitem__(self, index):
         data_id = self.all_data[index]
         pc_path = os.path.join(self.pc_root, data_id + '.ply')
+        print(f"pc_path: {pc_path}")
         if not os.path.exists(pc_path):
             print(f"error pc_path: {pc_path}")
             return self.__getitem__(index + 1)

@@ -179,6 +179,7 @@ class ShapeCodesDataset(Dataset):
         data_id = self.all_data[index]
         pc_path = os.path.join(self.pc_root, data_id + '.ply')
         if not os.path.exists(pc_path):
+            print(f"error pc_path: {pc_path}")
             return self.__getitem__(index + 1)
         pc = read_ply(pc_path)
         sample_idx = random.sample(list(range(pc.shape[0])), self.n_points)

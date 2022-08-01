@@ -22,7 +22,7 @@ except Exception as e:
 
 class Config(object):
     n_points = 2048
-    batch_size = 128
+    batch_size = 64
     num_workers = 4
     nr_epochs = 200
     lr = 1e-4

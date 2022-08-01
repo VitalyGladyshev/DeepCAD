@@ -178,9 +178,9 @@ class ShapeCodesDataset(Dataset):
     def __getitem__(self, index):
         data_id = self.all_data[index]
         pc_path = os.path.join(self.pc_root, data_id + '.ply')
-        print(f"pc_path: {pc_path}")
+#         print(f"pc_path: {pc_path}")
         if not os.path.exists(pc_path):
-            print(f"error pc_path: {pc_path}")
+#             print(f"error pc_path: {pc_path}")
             return self.__getitem__(index + 1)
         pc = read_ply(pc_path)
         sample_idx = random.sample(list(range(pc.shape[0])), self.n_points)
@@ -204,7 +204,7 @@ def get_dataloader(phase, config, shuffle=None):
 parser = argparse.ArgumentParser()
 parser.add_argument('--proj_dir', type=str, default="proj_log",
                    help="path to project folder where models and logs will be saved")
-parser.add_argument('--pc_root', type=str, default="../input/deepcad/pc_cad/pc_cad", help="path to point clouds data folder")
+parser.add_argument('--pc_root', type=str, default="../../input/deepcad/pc_cad/pc_cad", help="path to point clouds data folder")
 parser.add_argument('--split_path', type=str, default="data/train_val_test_split.json", help="path to train-val-test split")
 parser.add_argument('--exp_name', type=str, required=True, help="name of this experiment")
 parser.add_argument('--ae_ckpt', type=str, required=True, help="desired checkpoint to restore")

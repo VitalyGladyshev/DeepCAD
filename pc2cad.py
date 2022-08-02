@@ -30,7 +30,7 @@ class Config(object):
     # beta1 = 0.5
     grad_clip = None
 
-    save_frequency = 2
+    save_frequency = 3
     val_frequency = 10
 
     def __init__(self, args):
@@ -43,9 +43,9 @@ class Config(object):
         self.gpu_ids = args.gpu_ids
 
         if (not args.test) and args.cont is not True and os.path.exists(self.exp_dir):
-            response = input('Experiment log/model already exists, overwrite? (y/n) ')
-            if response != 'y':
-                exit()
+#             response = input('Experiment log/model already exists, overwrite? (y/n) ')
+#             if response != 'y':
+#                 exit()
             shutil.rmtree(self.exp_dir)
         ensure_dirs([self.log_dir, self.model_dir])
         if not args.test:

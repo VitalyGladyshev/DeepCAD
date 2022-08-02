@@ -30,7 +30,7 @@ class Config(object):
     # beta1 = 0.5
     grad_clip = None
 
-    save_frequency = 3
+    save_frequency = 1
     val_frequency = 10
 
     def __init__(self, args):
@@ -257,7 +257,7 @@ if not args.test:
 
         if clock.epoch % cfg.save_frequency == 0:
             agent.save_ckpt()
-            exit()
+#             exit()
 
         # if clock.epoch % 10 == 0:
         agent.save_ckpt('latest')

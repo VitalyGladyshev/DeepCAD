@@ -10,6 +10,7 @@ import shutil
 import json
 import random
 import sys
+import pathlib
 sys.path.append("..")
 from trainer.base import BaseTrainer
 from utils import cycle, ensure_dirs, ensure_dir, read_ply, write_ply
@@ -283,6 +284,9 @@ else:
         pts = data['points'].detach().cpu().numpy()
         for j in range(pred_z.shape[0]):
             save_path = os.path.join(save_dir, "{}.ply".format(data['id'][j]))
+            existGDBPath = pathlib.Path(save_path)
+            if not os.path.exists(existGDBPath.parent):
+                os.makedirs(existGDBPath.parent)
             write_ply(pts[j], save_path)
         cnt += pred_z.shape[0]
         if cnt > args.n_samples:

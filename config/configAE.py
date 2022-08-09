@@ -97,7 +97,7 @@ class ConfigAE(object):
         parser.add_argument('--augment', action='store_true', help="use random data augmentation")
         
         if not self.is_train:
-            parser.add_argument('-m', '--mode', type=str, choices=['rec', 'enc', 'dec'])
+            parser.add_argument('-m', '--mode', type=str, choices=['rec', 'enc', 'dec', 'dec_pc'])
             parser.add_argument('-o', '--outputs', type=str, default=None)
             parser.add_argument('--z_path', type=str, default=None)
         

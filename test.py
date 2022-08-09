@@ -20,6 +20,8 @@ def main():
         encode(cfg)
     elif cfg.mode == 'dec':
         decode(cfg)
+    elif cfg.mode == 'dec_pc':
+        decode_pc(cfg)
     else:
         raise ValueError
 
@@ -41,9 +43,13 @@ def reconstruct(cfg):
     ensure_dir(cfg.outputs)
 
     # evaluate
+    firs_flag = True
     pbar = tqdm(test_loader)
     for i, data in enumerate(pbar):
         batch_size = data['command'].shape[0]
+        if firs_flag:
+            print(f"batch_size = data['command'].shape[0] : {batch_size}")
+            firs_flag = False
         commands = data['command']
         args = data['args']
         gt_vec = torch.cat([commands.unsqueeze(-1), args], dim=-1).squeeze(1).detach().cpu().numpy()
@@ -108,6 +114,8 @@ def decode(cfg):
     save_dir = cfg.z_path.split('.')[0] + '_dec'
     ensure_dir(save_dir)
 
+    print(f"cfg.batch_size {cfg.batch_size}")
+
     # decode
     for i in range(0, len(zs), cfg.batch_size):
         with torch.no_grad():
@@ -124,6 +132,52 @@ def decode(cfg):
             save_path = os.path.join(save_dir, '{}.h5'.format(i + j))
             with h5py.File(save_path, 'w') as fp:
                 fp.create_dataset('out_vec', data=out_vec[:seq_len], dtype=np.int)
+
+
+def decode_pc(cfg):
+    # create network and training agent
+    tr_agent = TrainerAE(cfg)
+
+    # load from checkpoint if provided
+    tr_agent.load_ckpt(cfg.ckpt)
+    tr_agent.net.eval()
+
+    # create dataloader
+    test_loader = get_dataloader('test', cfg)
+    print("Total number of test data:", len(test_loader))
+
+    if cfg.outputs is None:
+        cfg.outputs = "{}/results/test_pc_{}".format(cfg.exp_dir, cfg.ckpt)
+    ensure_dir(cfg.outputs)
+
+    # load latent zs
+    with h5py.File(cfg.z_path, 'r') as fp:
+        zs = fp['zs'][:]
+
+    # decode
+    pbar = tqdm(test_loader)
+    for i, data in enumerate(pbar):
+        batch_size = data['command'].shape[0]
+        commands = data['command']
+        args = data['args']
+        gt_vec = torch.cat([commands.unsqueeze(-1), args], dim=-1).squeeze(1).detach().cpu().numpy()
+        commands_ = gt_vec[:, :, 0]
+        with torch.no_grad():
+            batch_z = torch.tensor(zs[i:i+cfg.batch_size], dtype=torch.float32).unsqueeze(1)
+            batch_z = batch_z.cuda()
+            outputs = tr_agent.decode(batch_z)
+            batch_out_vec = tr_agent.logits2vec(outputs)
+
+        for j in range(batch_size):
+            out_vec = batch_out_vec[j]
+            seq_len = commands_[j].tolist().index(EOS_IDX)
+
+            data_id = data["id"][j].split('/')[-1]      # data_id = data["id"][j].split('\\')[-1]
+
+            save_path = os.path.join(cfg.outputs, '{}_vec_pc.h5'.format(data_id))
+            with h5py.File(save_path, 'w') as fp:
+                fp.create_dataset('out_vec', data=out_vec[:seq_len], dtype=int)
+                fp.create_dataset('gt_vec', data=gt_vec[j][:seq_len], dtype=int)
 
 
 if __name__ == '__main__':

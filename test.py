@@ -43,13 +43,13 @@ def reconstruct(cfg):
     ensure_dir(cfg.outputs)
 
     # evaluate
-    firs_flag = True
+#     firs_flag = True
     pbar = tqdm(test_loader)
     for i, data in enumerate(pbar):
         batch_size = data['command'].shape[0]
-        if firs_flag:
-            print(f"batch_size = data['command'].shape[0] : {batch_size}")
-            firs_flag = False
+#         if firs_flag:
+#             print(f"batch_size = data['command'].shape[0] : {batch_size}")
+#             firs_flag = False
         commands = data['command']
         args = data['args']
         gt_vec = torch.cat([commands.unsqueeze(-1), args], dim=-1).squeeze(1).detach().cpu().numpy()
@@ -114,7 +114,7 @@ def decode(cfg):
     save_dir = cfg.z_path.split('.')[0] + '_dec'
     ensure_dir(save_dir)
 
-    print(f"cfg.batch_size {cfg.batch_size}")
+#     print(f"cfg.batch_size {cfg.batch_size}")
 
     # decode
     for i in range(0, len(zs), cfg.batch_size):

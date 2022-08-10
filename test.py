@@ -163,7 +163,7 @@ def decode_pc(cfg):
         gt_vec = torch.cat([commands.unsqueeze(-1), args], dim=-1).squeeze(1).detach().cpu().numpy()
         commands_ = gt_vec[:, :, 0]
         with torch.no_grad():
-            batch_z = torch.tensor(zs[i:i+cfg.batch_size], dtype=torch.float32).unsqueeze(1)
+            batch_z = torch.tensor(zs[i*cfg.batch_size:i*cfg.batch_size+cfg.batch_size], dtype=torch.float32).unsqueeze(1)
             batch_z = batch_z.cuda()
             outputs = tr_agent.decode(batch_z)
             batch_out_vec = tr_agent.logits2vec(outputs)

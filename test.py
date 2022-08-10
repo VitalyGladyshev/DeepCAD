@@ -152,7 +152,7 @@ def decode_pc(cfg):
 
     # load latent zs
     with h5py.File(cfg.z_path, 'r') as fp:
-        zs = fp['zs'][:]
+        zs = fp['zs'][:]        # fp['test_zs'][:]
 
     # decode
     pbar = tqdm(test_loader)

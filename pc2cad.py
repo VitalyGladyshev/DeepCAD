@@ -23,7 +23,6 @@ except Exception as e:
 
 class Config(object):
     n_points = 2048
-    batch_size = 64
     num_workers = 4
     nr_epochs = 500
     lr = 1e-4
@@ -42,6 +41,7 @@ class Config(object):
         self.log_dir = os.path.join(self.exp_dir, 'log')
         self.model_dir = os.path.join(self.exp_dir, 'model')
         self.gpu_ids = args.gpu_ids
+        self.batch_size = args.batch_size
 
         if (not args.test) and args.cont is not True and os.path.exists(self.exp_dir):
 #             response = input('Experiment log/model already exists, overwrite? (y/n) ')
@@ -213,6 +213,7 @@ parser.add_argument('--continue', dest='cont', action='store_true', help="contin
 parser.add_argument('--ckpt', type=str, default='latest', required=False, help="desired checkpoint to restore")
 parser.add_argument('--test',action='store_true', help="test mode")
 parser.add_argument('--n_samples', type=int, default=100, help="number of samples to generate when testing")
+parser.add_argument('--batch_size', type=int, default=128, help="batch size")
 parser.add_argument('-g', '--gpu_ids', type=str, default="0",
                    help="gpu to use, e.g. 0  0,1,2. CPU not supported.")
 args = parser.parse_args()

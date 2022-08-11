@@ -30,6 +30,8 @@ N_ARGS = args_mask.shape[1]
 each_param_cnt = np.zeros([*args_mask.shape])
 each_param_acc = np.zeros([*args_mask.shape])
 
+nan_cnt = 0
+
 for name in tqdm(filenames):
     path = os.path.join(result_dir, name)
     with h5py.File(path, "r") as fp:
@@ -65,7 +67,11 @@ for name in tqdm(filenames):
             each_param_cnt[cmd, np.arange(N_ARGS)] += 1
             each_param_acc[cmd, np.arange(N_ARGS)] += tole_acc
 
-    param_acc = np.mean(param_acc)
+    if not len(param_acc):
+        param_acc = 0
+        nan_cnt += 1
+    else:
+        param_acc = np.mean(param_acc)
     avg_param_acc.append(param_acc)
     cmd_acc = np.mean(cmd_acc)
     avg_cmd_acc.append(cmd_acc)
@@ -89,6 +95,7 @@ each_param_cnt = each_param_cnt * args_mask
 each_param_acc = each_param_acc / (each_param_cnt + 1e-6)
 for i in range(each_param_acc.shape[0]):
     print(ALL_COMMANDS[i] + " param acc:", each_param_acc[i][args_mask[i].astype(np.bool)], file=fp)
+print(f"empty counter: {nan_cnt}", file=fp)
 fp.close()
 
 with open(save_path, "r") as fp:

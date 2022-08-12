@@ -22,9 +22,9 @@ except Exception as e:
 
 
 class Config(object):
-    n_points = 2048     # 4096  8096
+    n_points = 4096     # 2048  8096
     num_workers = 4
-    nr_epochs = 500
+    nr_epochs = 200
     lr = 1e-4
     lr_step_size = 50
     # beta1 = 0.5

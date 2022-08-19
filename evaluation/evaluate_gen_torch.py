@@ -146,7 +146,7 @@ def unit_cube_grid_point_cloud(resolution, clip_sphere=False):
     that is placed in the unit-cube.
     If clip_sphere it True it drops the "corner" cells that lie outside the unit-sphere.
     '''
-    grid = np.ndarray((resolution, resolution, resolution, 3), np.float32)
+    grid = np.ndarray((resolution, resolution, resolution, 3), float32)
     spacing = 1.0 / float(resolution - 1) * 2
     for i in range(resolution):
         for j in range(resolution):
